@@ -9,12 +9,15 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/my-web-app",
+            "outputPath": {
+              "base": "dist/my-web-app"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -23,7 +26,8 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
@@ -40,8 +44,6 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -55,11 +57,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "my-web-app:build"
+            "buildTarget": "my-web-app:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "my-web-app:build:production"
+              "buildTarget": "my-web-app:build:production"
             }
           }
         },
@@ -95,7 +97,6 @@
       }
     }
   },
-  "defaultProject": "my-web-app",
   "cli": {
     "analytics": false
   }
