@@ -51,51 +51,74 @@
     </div>
 
     <!-- Stock Results -->
-    <div *ngIf="stockData" [ngClass]="(isDark$ | async) ? 'bg-gray-800' : 'bg-white'" class="rounded-lg shadow-lg p-6 mb-6 transition-colors">
-      <h2 class="text-2xl font-bold mb-4" [ngClass]="(isDark$ | async) ? 'text-white' : 'text-gray-800'">
-        {{ stockData.symbol }}
-      </h2>
-      
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <p [ngClass]="(isDark$ | async) ? 'text-gray-400' : 'text-gray-600'" class="text-sm">Current Price</p>
-          <p class="text-2xl font-bold" [ngClass]="(isDark$ | async) ? 'text-white' : 'text-gray-900'">
-            ${{ stockData.price?.toFixed(2) }}
-          </p>
-        </div>
+     @if(stockData) {
+      <div [ngClass]="(isDark$ | async) ? 'bg-gray-800' : 'bg-white'" class="rounded-lg shadow-lg p-6 mb-6 transition-colors">
+        <h2 class="text-2xl font-bold mb-4" [ngClass]="(isDark$ | async) ? 'text-white' : 'text-gray-800'">
+          {{ stockData.symbol }}
+        </h2>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <p [ngClass]="(isDark$ | async) ? 'text-gray-400' : 'text-gray-600'" class="text-sm">Current Price</p>
+            <p class="text-2xl font-bold" [ngClass]="(isDark$ | async) ? 'text-white' : 'text-gray-900'">
+              ${{ stockData.price?.toFixed(2) }}
+            </p>
+          </div>
 
-        <!-- Price Change Indicator -->
-        <div>
-          <p [ngClass]="(isDark$ | async) ? 'text-gray-400' : 'text-gray-600'" class="text-sm">Change</p>
-          <p class="text-2xl font-bold" 
-            [ngClass]="stockData.price > stockData.previousClose 
-              ? 'text-green-500' 
-              : 'text-red-500'">
-            {{ stockData.price > stockData.previousClose ? '⬆️' : '⬇️' }}
-            {{ ((stockData.price - stockData.previousClose) / stockData.previousClose * 100).toFixed(2) }}%
-          </p>
-        </div>
+          <!-- Price Change Indicator -->
+          <div>
+            <p [ngClass]="(isDark$ | async) ? 'text-gray-400' : 'text-gray-600'" class="text-sm">Change</p>
+            <p class="text-2xl font-bold" 
+              [ngClass]="stockData.price > stockData.previousClose 
+                ? 'text-green-500' 
+                : 'text-red-500'">
+              {{ stockData.price > stockData.previousClose ? '⬆️' : '⬇️' }}
+              {{ ((stockData.price - stockData.previousClose) / stockData.previousClose * 100).toFixed(2) }}%
+            </p>
+          </div>
 
-        <div>
-          <p [ngClass]="(isDark$ | async) ? 'text-gray-400' : 'text-gray-600'" class="text-sm">Open</p>
-          <p [ngClass]="(isDark$ | async) ? 'text-white' : 'text-gray-900'" class="text-lg font-semibold">
-            ${{ stockData.open?.toFixed(2) }}
-          </p>
-        </div>
+          <div>
+            <p [ngClass]="(isDark$ | async) ? 'text-gray-400' : 'text-gray-600'" class="text-sm">Open</p>
+            <p [ngClass]="(isDark$ | async) ? 'text-white' : 'text-gray-900'" class="text-lg font-semibold">
+              ${{ stockData.open?.toFixed(2) }}
+            </p>
+          </div>
 
-        <div>
-          <p [ngClass]="(isDark$ | async) ? 'text-gray-400' : 'text-gray-600'" class="text-sm">High/Low</p>
-          <p [ngClass]="(isDark$ | async) ? 'text-white' : 'text-gray-900'" class="text-lg font-semibold">
-            ${{ stockData.high?.toFixed(2) }} / ${{ stockData.low?.toFixed(2) }}
-          </p>
+          <div>
+            <p [ngClass]="(isDark$ | async) ? 'text-gray-400' : 'text-gray-600'" class="text-sm">High/Low</p>
+            <p [ngClass]="(isDark$ | async) ? 'text-white' : 'text-gray-900'" class="text-lg font-semibold">
+              ${{ stockData.high?.toFixed(2) }} / ${{ stockData.low?.toFixed(2) }}
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    }
 
     <!-- Error Message -->
-    <p *ngIf="error" [ngClass]="(isDark$ | async) ? 'bg-red-900 text-red-200 border-red-700' : 'bg-red-50 text-red-700 border-red-200'" 
-      class="p-3 border rounded">
-      {{ error }}
-    </p>
+     @if(error) {
+      <p [ngClass]="(isDark$ | async) ? 'bg-red-900 text-red-200 border-red-700' : 'bg-red-50 text-red-700 border-red-200'" 
+        class="p-3 border rounded">
+        {{ error }}
+      </p>
+    }
+
+    <!-- Recent Search History Section -->
+    @if(recentSearchHistory.length > 0) {
+      <div [ngClass]="(isDark$ | async) ? 'bg-gray-800' : 'bg-white'" class="rounded-lg shadow-lg p-6 transition-colors">
+        <h3 class="text-xl font-bold mb-4" [ngClass]="(isDark$ | async) ? 'text-white' : 'text-gray-800'">Recent Searches</h3>
+        <div class="space-y-2">
+          <div 
+            *ngFor="let search of recentSearchHistory"
+            [ngClass]="(isDark$ | async) ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-100'"
+            class="grid grid-cols-3 gap-4 items-center p-3 rounded transition"
+          >
+            <span [ngClass]="(isDark$ | async) ? 'text-indigo-400' : 'text-indigo-600'" class="font-semibold">{{ search.symbol }}</span>
+            <span [ngClass]="(isDark$ | async) ? 'text-gray-400' : 'text-gray-600'" class="text-right">${{ search.price }}</span>
+            <span [ngClass]="(isDark$ | async) ? 'text-gray-500' : 'text-gray-500'" class="text-sm text-right">{{ search.timestamp | date:'short' }}</span>
+          </div>
+        </div>
+      </div>
+    }
   </div>
+  
 </div>
