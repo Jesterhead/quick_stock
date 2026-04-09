@@ -1,6 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity()
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -10,4 +10,13 @@ export class User {
 
   @Column()
   password: string;
+
+  @Column({ default: 0 })
+  failedLoginAttempts: number;
+
+  @Column({ nullable: true })
+  lockedUntil: Date;
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }

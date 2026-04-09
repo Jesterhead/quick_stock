@@ -91,6 +91,61 @@ describe('AuthService', () => {
         service.login('brent_seems_nice', 'wrong_password'),
       ).rejects.toThrow(UnauthorizedException);
     });
+
+    it('should lock account after max failed attempts', async () => {
+        const mockUser = {
+          id: 1,
+          username: 'brent_seems_nice',
+          password: await AuthUtils.hashPassword('correct_password'),
+          failedLoginAttempts: 4,
+          lockedUntil: null,
+        };
+    
+        userRepository.findOne.mockResolvedValue(mockUser);
+        userRepository.save.mockResolvedValue({ ...mockUser, failedLoginAttempts: 5, lockedUntil: new Date() });
+    
+        await expect(
+          service.login('brent_seems_nice', 'wrong_password'),
+        ).rejects.toThrow('Too many failed attempts');
+      });
+    
+      it('should throw error if account is locked', async () => {
+        const futureDate = new Date(Date.now() + 10 * 60 * 1000);
+        const mockUser = {
+          id: 1,
+          username: 'brent_seems_nice',
+          password: await AuthUtils.hashPassword('correct_password'),
+          failedLoginAttempts: 5,
+          lockedUntil: futureDate,
+        };
+    
+        userRepository.findOne.mockResolvedValue(mockUser);
+    
+        await expect(
+          service.login('brent_seems_nice', 'correct_password'),
+        ).rejects.toThrow('Account locked');
+      });
+    
+      it('should reset failed attempts on successful login', async () => {
+        const mockUser = {
+          id: 1,
+          username: 'brent_seems_nice',
+          password: await AuthUtils.hashPassword('correct_password'),
+          failedLoginAttempts: 2,
+          lockedUntil: null,
+        };
+    
+        userRepository.findOne.mockResolvedValue(mockUser);
+    
+        await service.login('brent_seems_nice', 'correct_password');
+    
+        expect(userRepository.save).toHaveBeenCalledWith(
+          expect.objectContaining({
+            failedLoginAttempts: 0,
+            lockedUntil: null,
+          }),
+        );
+    });
   });
 
   describe('register', () => {
