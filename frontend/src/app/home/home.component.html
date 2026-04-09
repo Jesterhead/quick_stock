@@ -1,23 +1,79 @@
-<div class="home-container">
-    <h1>Stock Lookup</h1>
-    <input [(ngModel)]="searchQuery" placeholder="Enter stock symbol" />
-    <button (click)="searchStock()">Search</button>
-    
-    <div *ngIf="stockData" class="stock-info">
-        <p><strong>{{ stockData.symbol }}: ${{ stockData.price }}</strong></p>
-        <p>High: ${{ stockData.high }}</p>
-        <p>Low: ${{ stockData.low }}</p>
-        <p>Open: ${{ stockData.open }}</p>
-      </div>
-      
-      <div *ngIf="recentSearchHistory.length > 0" class="history">
-        <h3>Most Recent Searches</h3>
-        <ul>
-          <li *ngFor="let search of recentSearchHistory">
-            {{ search.symbol }}: ${{ search.price }} - {{ search.timestamp | date:'short' }}
-          </li>
-        </ul>
-      </div>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+  <div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">Quote Quest</h1>
+      <p class="text-gray-600">Fetch. Parse. Profit. Repeat. Grind for your riches.</p>
+    </div>
 
-    <p *ngIf="error" class="error">{{ error }}</p>
+    <!-- Search Section -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+      <div class="flex gap-2">
+        <input 
+          [(ngModel)]="searchQuery" 
+          placeholder="Enter stock symbol (e.g., SONY)"
+          class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+        <button 
+          (click)="searchStock()"
+          class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold"
+        >
+          Search
+        </button>
+      </div>
+    </div>
+
+    <!-- Stock Details Section -->
+    @if(stockData) {
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div class="border-b border-gray-200 pb-4 mb-4">
+            <h2 class="text-2xl font-bold text-indigo-600">{{ stockData.symbol }}</h2>
+            <p class="text-3xl font-bold text-gray-800 mt-2">${{ stockData.price }}</p>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-gray-50 p-4 rounded">
+            <p class="text-sm text-gray-600">High</p>
+            <p class="text-lg font-semibold text-gray-800">${{ stockData.high }}</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+            <p class="text-sm text-gray-600">Low</p>
+            <p class="text-lg font-semibold text-gray-800">${{ stockData.low }}</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+            <p class="text-sm text-gray-600">Open</p>
+            <p class="text-lg font-semibold text-gray-800">${{ stockData.open }}</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+            <p class="text-sm text-gray-600">Previous Close</p>
+            <p class="text-lg font-semibold text-gray-800">${{ stockData.previousClose }}</p>
+            </div>
+        </div>
+        </div>
+    }   
+
+    <!-- Recent Search History Section -->
+    @if(recentSearchHistory.length > 0) {
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Recent Searches</h3>
+            <div class="space-y-2">
+              <div 
+                *ngFor="let search of recentSearchHistory"
+                class="grid grid-cols-3 gap-4 items-center p-3 bg-gray-50 rounded hover:bg-gray-100 transition"
+              >
+                <span class="font-semibold text-indigo-600">{{ search.symbol }}</span>
+                <span class="text-gray-600 text-right">${{ search.price }}</span>
+                <span class="text-sm text-gray-500 text-right">{{ search.timestamp | date:'short' }}</span>
+              </div>
+            </div>
+          </div>
+    }
+
+    <!-- Error Section -->
+    @if(error) {
+        <div class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+        <p class="text-red-700 font-semibold">{{ error }}</p>
+        </div>
+    }
   </div>
+</div>
