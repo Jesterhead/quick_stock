@@ -5,13 +5,7 @@ import { StockService } from './stock.service';
 import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
-  imports: [
-    HttpModule,
-    CacheModule.register({
-        isGlobal: false,
-        ttl: 60 * 60 * 1000,
-      }),
-  ],
+  imports: [HttpModule],
   controllers: [StockController],
   providers: [StockService],
 })

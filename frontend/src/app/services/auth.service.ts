@@ -23,12 +23,19 @@ export class AuthService {
     );
   }
 
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+  logout(): Observable<any> {
+    const token = localStorage.getItem('token');
+    return this.http.post(`${this.apiUrl}/logout`, {}, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    }).pipe(
+      tap(() => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+      })
+    );
   }
 
-  logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('token');
   }
 }

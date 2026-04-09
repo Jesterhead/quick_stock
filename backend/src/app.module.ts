@@ -9,10 +9,15 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { StockModule } from './stocks/stock.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 60 * 60 * 1000, // 1 hour default
+    }),
     ThrottlerModule.forRoot([
       {
         ttl: 60000,

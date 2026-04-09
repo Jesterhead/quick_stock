@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { StockService } from '../services/stock.service';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +18,11 @@ export class HomeComponent implements OnInit {
   recentSearchHistory: any[] = [];
   error = '';
 
-  constructor(private stockService: StockService) {}
+  constructor(
+    private stockService: StockService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadRecentSearchHistory();
@@ -44,6 +50,18 @@ export class HomeComponent implements OnInit {
     this.stockService.getRecentSearchHistory().subscribe({
       next: (history) => this.recentSearchHistory = history,
       error: () => console.log('Failed to load history')
+    });
+  }
+
+  logout() {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        // Still logout locally even if backend fails
+        this.router.navigate(['/login']);
+      }
     });
   }
 }

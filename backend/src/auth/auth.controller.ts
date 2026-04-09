@@ -1,6 +1,7 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { JwtGuard } from './guards/auth.guard';
 
 
 @Controller('auth')
@@ -11,5 +12,11 @@ export class AuthController {
   @Post('login')
   login(@Body() credentials: { username: string; password: string }) {
     return this.authService.login(credentials.username, credentials.password);
+  }
+
+  @Post('logout')
+  @UseGuards(JwtGuard)
+  logout(@Req() req) {
+    return this.authService.logout(req.user.userId);
   }
 }
