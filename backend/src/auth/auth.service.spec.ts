@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException, ConflictException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from '../entities/auth/user.entity';
 import { AuthUtils } from './auth.utils';
@@ -27,6 +27,8 @@ describe('AuthService', () => {
           provide: getRepositoryToken(User),
           useValue: {
             findOne: jest.fn(),
+            create: jest.fn(),
+            save: jest.fn(),
           },
         },
         {
@@ -88,6 +90,63 @@ describe('AuthService', () => {
       await expect(
         service.login('brent_seems_nice', 'wrong_password'),
       ).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('register', () => {
+    it('should create a new user successfully', async () => {
+      userRepository.findOne.mockResolvedValue(null);
+      const mockNewUser = {
+        id: 2,
+        username: 'new_user',
+        password: 'hashed_password',
+      };
+      userRepository.create.mockReturnValue(mockNewUser);
+      userRepository.save.mockResolvedValue(mockNewUser);
+
+      const result = await service.register('new_user', 'NewPassword123');
+
+      expect(result).toEqual({
+        message: 'User registered successfully',
+        username: 'new_user',
+      });
+      expect(userRepository.findOne).toHaveBeenCalledWith({
+        where: { username: 'new_user' },
+      });
+      expect(userRepository.create).toHaveBeenCalled();
+      expect(userRepository.save).toHaveBeenCalled();
+    });
+
+    it('should throw ConflictException if username already exists', async () => {
+      const existingUser = {
+        id: 1,
+        username: 'existing_user',
+        password: 'hashed_password',
+      };
+      userRepository.findOne.mockResolvedValue(existingUser);
+
+      await expect(
+        service.register('existing_user', 'NewPassword123'),
+      ).rejects.toThrow(ConflictException);
+      expect(userRepository.create).not.toHaveBeenCalled();
+    });
+
+    it('should hash password before saving', async () => {
+      userRepository.findOne.mockResolvedValue(null);
+      const mockNewUser = {
+        id: 2,
+        username: 'new_user',
+        password: 'hashed_password',
+      };
+      userRepository.create.mockReturnValue(mockNewUser);
+      userRepository.save.mockResolvedValue(mockNewUser);
+
+      await service.register('new_user', 'NewPassword123');
+
+      expect(userRepository.create).toHaveBeenCalled();
+      const createCall = userRepository.create.mock.calls[0][0];
+      expect(createCall.username).toBe('new_user');
+      expect(createCall.password).toBeDefined();
     });
   });
 

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 
@@ -9,7 +9,7 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [FormsModule, CommonModule]
+  imports: [FormsModule, CommonModule, RouterLink]
 })
 export class LoginComponent {
   username = '';

@@ -1,4 +1,4 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/auth/user.entity';
@@ -36,5 +36,25 @@ export class AuthService {
         const key = `search-history:${userId}`;
         await this.cacheManager.del(key);
         return { message: 'Logged out successfully' };
+      }
+
+      async register(username: string, password: string) {
+        const existingUser = await this.userRepository.findOne({ where: { username } });
+        
+        if (existingUser) {
+          throw new ConflictException('Username already exists');
+        }
+    
+        const hashedPassword = await AuthUtils.hashPassword(password);
+    
+        // Create new user (TypeORM parameterized queries prevent SQL injection)
+        const newUser = this.userRepository.create({
+          username,
+          password: hashedPassword,
+        });
+    
+        await this.userRepository.save(newUser);
+    
+        return { message: 'User registered successfully', username };
       }
 }
