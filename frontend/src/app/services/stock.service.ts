@@ -11,6 +11,18 @@ export class StockService {
   constructor(private http: HttpClient) {}
 
   getStock(symbol: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/search?symbol=${symbol}`);
+    const token = localStorage.getItem('token');
+    return this.http.get(`${this.apiUrl}/search?symbol=${symbol}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+  }
+
+  getRecentSearchHistory(): Observable<any[]> {
+    const token = localStorage.getItem('token');
+    return this.http.get<any[]>(`${this.apiUrl}/history`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
   }
 }

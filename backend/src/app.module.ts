@@ -8,6 +8,7 @@ import { User } from './entities/auth/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { StockModule } from './stocks/stock.module';
 
 @Module({
   imports: [
@@ -24,9 +25,10 @@ import { ThrottlerModule } from '@nestjs/throttler';
       entities: [User],
       synchronize: true,
     }),
-    AuthModule
+    AuthModule,
+    StockModule
   ],
-  controllers: [AppController, StockController],
-  providers: [AppService, StockService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

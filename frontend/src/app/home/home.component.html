@@ -4,7 +4,20 @@
     <button (click)="searchStock()">Search</button>
     
     <div *ngIf="stockData" class="stock-info">
-      <p>{{ stockData.symbol }}: ${{ stockData.price }}</p>
-    </div>
+        <p><strong>{{ stockData.symbol }}: ${{ stockData.price }}</strong></p>
+        <p>High: ${{ stockData.high }}</p>
+        <p>Low: ${{ stockData.low }}</p>
+        <p>Open: ${{ stockData.open }}</p>
+      </div>
+      
+      <div *ngIf="recentSearchHistory.length > 0" class="history">
+        <h3>Most Recent Searches</h3>
+        <ul>
+          <li *ngFor="let search of recentSearchHistory">
+            {{ search.symbol }}: ${{ search.price }} - {{ search.timestamp | date:'short' }}
+          </li>
+        </ul>
+      </div>
+
     <p *ngIf="error" class="error">{{ error }}</p>
   </div>
