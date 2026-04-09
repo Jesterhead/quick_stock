@@ -13,7 +13,12 @@ import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: process.env.NODE_ENV === 'production' 
+        ? '.env.prod' 
+        : '.env',
+    }),
     CacheModule.register({
       isGlobal: true,
       ttl: 60 * 60 * 1000, // 1 hour default
@@ -25,11 +30,16 @@ import { CacheModule } from '@nestjs/cache-manager';
       },
     ]),
     TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'db.sqlite',
+      type: process.env.NODE_ENV === 'production' ? 'postgres' : 'sqlite',
+      database: process.env.NODE_ENV === 'production' 
+        ? process.env.DATABASE_URL 
+        : 'db.sqlite',
       entities: [User],
-      synchronize: true,
+      synchronize: process.env.NODE_ENV === 'development',
+      migrations: ['dist/migrations/*.js'],
+      migrationsRun: true,
     }),
+    TypeOrmModule.forFeature([User]),
     AuthModule,
     StockModule
   ],

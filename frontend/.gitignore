@@ -1,15 +1,10 @@
-# Environment files
-.env
-.env.prod
-
 # Dependencies
 node_modules/
+package-lock.json
+
+# Build outputs
 dist/
 .angular/
-
-# Database
-*.sqlite
-*.db
 
 # IDE
 .vscode/

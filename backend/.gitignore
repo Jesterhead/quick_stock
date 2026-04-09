@@ -4,8 +4,10 @@
 
 # Dependencies
 node_modules/
+package-lock.json
+
+# Build outputs
 dist/
-.angular/
 
 # Database
 *.sqlite
@@ -20,3 +22,8 @@ dist/
 # OS
 .DS_Store
 Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*

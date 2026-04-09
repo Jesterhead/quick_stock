@@ -4,11 +4,10 @@
   "description": "Backend for my web app using Nest.js",
   "main": "dist/main.js",
   "scripts": {
-    "start": "node dist/main.js",
+    "start": "npm run build && npm run start:prod",
     "start:dev": "nest start --watch",
-    "build": "tsc",
-    "watch": "tsc -w",
-    "test": "jest"
+    "start:prod": "node dist/main.js",
+    "build": "nest build"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.1",
@@ -29,10 +28,12 @@
     "class-validator": "^0.15.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "pg": "^8.20.0",
     "redis": "^5.11.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.0.0",
     "sqlite3": "^5.1.7",
+    "ts-node": "^10.9.2",
     "typeorm": "^0.3.28",
     "typescript": "^4.5.0"
   },
