@@ -40,6 +40,7 @@ export class HomeComponent implements OnInit {
     next: (data) => {
         this.stockData = data;
         this.error = '';
+        this.searchQuery = '';
         this.loadRecentSearchHistory();
     },
     error: (err) => this.error = err.error.message || 'Stock not found'
