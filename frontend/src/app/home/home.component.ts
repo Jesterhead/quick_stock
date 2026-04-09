@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { StockService } from '../services/stock.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-home',
@@ -17,15 +18,26 @@ export class HomeComponent implements OnInit {
   stockData: any = null;
   recentSearchHistory: any[] = [];
   error = '';
+  isDark$: any;
 
   constructor(
-    private stockService: StockService,
     private authService: AuthService,
+    private stockService: StockService,
+    private themeService: ThemeService,
     private router: Router
   ) {}
 
   ngOnInit() {
+    this.isDark$ = this.themeService.isDark$;
+    
+    if (!localStorage.getItem('token')) {
+      this.router.navigate(['/login']);
+    }
     this.loadRecentSearchHistory();
+  }
+
+  toggleTheme() {
+    this.themeService.toggle();
   }
 
   searchStock() {

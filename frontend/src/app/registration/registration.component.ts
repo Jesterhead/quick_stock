@@ -49,7 +49,7 @@ export class RegistrationComponent {
         },
         error: (err) => {
           this.loading = false;
-          this.error = err.error?.message || 'Invalid input. Please check your username and password format.';          ng build --prod
+          this.error = err.error?.message || 'Invalid input. Please check your username and password format.';
         }
       });
   }
