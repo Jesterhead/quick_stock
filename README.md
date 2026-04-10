@@ -59,7 +59,7 @@ Backend runs on http://localhost:3000 upon startup. It should also have a DB spu
 ```bash
 cd frontend
 npm install
-ng serve
+npm run ng -- serve --open
 ```
 
 Visit http://localhost:4200 once backend and front end are spun up.
