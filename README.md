@@ -1,6 +1,6 @@
 # Quote Quest
 
-A real-time stock quote lookup web application built with Angular and NestJS. To view the Production deployed application, visit https://triumphant-alignment-production-2609.up.railway.app/login. Otherwise, the setup for local deployment is below.
+A real-time stock quote lookup web application built with Angular and NestJS. To view the Production deployed application, visit https://triumphant-alignment-production-2609.up.railway.app. Otherwise, the setup for local deployment is below.
 
 ## Features
 
