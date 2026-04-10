@@ -10,6 +10,6 @@ FROM node:18-alpine
 WORKDIR /app
 RUN npm install -g serve
 COPY --from=builder /app/dist/my-web-app/browser /app/dist
-RUN ls -la dist/my-web-app/browser || echo "ERROR: dist folder not copied!"
+RUN ls -la dist || echo "ERROR: dist folder not copied!"
 EXPOSE 3000
 CMD ["serve", "-s", "dist", "-l", "3000"]
