@@ -10,6 +10,7 @@ import * as path from 'path';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AuthSeeding } from './auth/auth.seeding';
+import type { Response } from 'express';
 
 const envPath = path.resolve(process.cwd(), '.env.local');
 dotenv.config({ path: envPath });
@@ -26,13 +27,15 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Serve Angular static files in production
   if (nodeEnv === 'production') {
-    app.use(express.static(path.join(__dirname, '../../../frontend/dist/frontend')));
+    const frontendPath = path.join(__dirname, '../../frontend/dist/frontend');
+    console.log('Serving frontend from:', frontendPath);
     
-    app.use((req, res, next) => {
+    app.use(express.static(frontendPath));
+    
+    app.use((req, res: Response, next) => {
       if (!req.path.startsWith('/api') && !req.path.startsWith('/auth')) {
-        res.sendFile(path.join(__dirname, '../../../frontend/dist/frontend/index.html'));
+        res.sendFile(path.join(frontendPath, 'index.html'));
       } else {
         next();
       }
