@@ -1,10 +1,11 @@
+ARG CACHE_BUST=default
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --verbose
 COPY . .
 RUN npm run build -- --base-href=/
-RUN echo "=== Build output ===" && ls -laR /app/dist/
+RUN echo "=== Build output ===" && ls -laR /app/dist/ && echo "Build complete"
 
 FROM node:18-alpine
 WORKDIR /app
