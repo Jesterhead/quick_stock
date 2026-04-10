@@ -80,6 +80,12 @@ npm run start:dev  # Dev mode with watch
 
 Backend runs on http://localhost:3000 upon startup. It should also have a DB spun up and seeded with one test user. 
 
+To run the tests in the backend, simply run this command in the backend directory:
+
+```bash
+npm run test:cov
+```
+
 ### Frontend
 
 ```bash
