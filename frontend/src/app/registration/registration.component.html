@@ -46,6 +46,7 @@
       
       <button 
         (click)="register()" 
+        (keyup.enter)="register()"
         [disabled]="loading"
         class="w-full py-2 bg-gradient-to-r from-indigo-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-indigo-700 hover:to-indigo-700 transition disabled:bg-gray-400"
       >

@@ -42,22 +42,22 @@ export class HomeComponent implements OnInit {
 
   searchStock() {
     if (!this.searchQuery || this.searchQuery.trim().length === 0) {
-        this.error = 'Please enter a value';
-        return;
+      this.error = 'Please enter a value';
+      return;
     }
     
-    const trimmed = this.searchQuery.trim().toUpperCase().slice(0, 10);
+    const trimmed = this.searchQuery.trim().toUpperCase();
       
     this.stockService.getStock(trimmed).subscribe({
-    next: (data) => {
+      next: (data) => {
         this.stockData = data;
         this.error = '';
         this.searchQuery = '';
         this.loadRecentSearchHistory();
-    },
-    error: (err) => this.error = err.error.message || 'Stock not found'
+      },
+      error: (err) => this.error = err.error.message || 'Stock not found'
     });
-  }
+    }
 
   loadRecentSearchHistory() {
     this.stockService.getRecentSearchHistory().subscribe({

@@ -35,7 +35,8 @@
         <input 
           [(ngModel)]="searchQuery" 
           (keyup.enter)="searchStock()"
-          placeholder="Enter stock symbol (e.g., AAPL)"
+          placeholder="Enter stock symbol (e.g., SONY)"
+          maxlength="10"
           [ngClass]="(isDark$ | async) 
             ? 'bg-gray-700 text-white placeholder-gray-400 focus:ring-indigo-400' 
             : 'bg-white text-gray-900 placeholder-gray-500 focus:ring-indigo-500'"

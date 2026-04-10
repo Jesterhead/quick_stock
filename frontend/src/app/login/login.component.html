@@ -26,6 +26,7 @@
       
       <button 
         (click)="login()" 
+        (keyup.enter)="login()" 
         [disabled]="loading"
         class="w-full py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition disabled:bg-gray-400"
       >
