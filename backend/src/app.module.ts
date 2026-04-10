@@ -30,14 +30,13 @@ import { CacheModule } from '@nestjs/cache-manager';
       },
     ]),
     TypeOrmModule.forRoot({
-      type: process.env.NODE_ENV === 'production' ? 'postgres' : 'sqlite',
-      database: process.env.NODE_ENV === 'production' 
-        ? process.env.DATABASE_URL 
-        : 'db.sqlite',
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
       entities: [User],
-      synchronize: process.env.NODE_ENV === 'development',
+      synchronize: false,
       migrations: ['dist/migrations/*.js'],
       migrationsRun: true,
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
     }),
     TypeOrmModule.forFeature([User]),
     AuthModule,
