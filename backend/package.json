@@ -8,10 +8,10 @@
   "description": "Backend for my web app using Nest.js",
   "main": "dist/main.js",
   "scripts": {
+    "build": "cd ../frontend && npm run build && cd ../backend && nest build",
     "start": "npm run build && npm run start:prod",
-    "start:dev": "nest start --watch",
     "start:prod": "node dist/main.js",
-    "build": "nest build",
+    "start:dev": "nest start --watch",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
