@@ -9,7 +9,7 @@ async function bootstrap() {
   
   app.enableCors({
     origin: process.env.NODE_ENV === 'production' 
-      ? 'https://your-vercel-frontend.vercel.app'
+      ? 'https://triumphant-alignment-production-2609.up.railway.app'
       : 'http://localhost:4200',
     credentials: true,
   });
