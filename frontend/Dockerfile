@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --verbose
 COPY . .
-RUN npm run build -- --base-href=/ --verbose
+RUN npm run build -- --base-href=/ --verbose 2>&1 | tail -100
 RUN echo "=== Build output ===" && ls -laR /app/dist/
 
 FROM node:18-alpine
