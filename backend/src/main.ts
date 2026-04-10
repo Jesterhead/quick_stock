@@ -1,3 +1,9 @@
+import * as crypto from 'crypto';
+
+if (!globalThis.crypto) {
+  globalThis.crypto = crypto as any;
+}
+
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { NestFactory } from '@nestjs/core';
