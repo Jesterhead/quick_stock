@@ -4,14 +4,13 @@ COPY package*.json ./
 RUN npm ci --verbose
 COPY . .
 RUN npm run build -- --base-href=/
-RUN ls -la /app/dist/my-web-app/
 
 FROM node:18-alpine
 WORKDIR /app
 RUN apk add --no-cache wget
 RUN npm install -g http-server
 COPY --from=builder /app/dist/my-web-app/browser /app/dist
-RUN ls -la /app/dist
+RUN ls -la /app/dist  # Force rebuild
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD wget --quiet --tries=1 --spider http://localhost:8080/ || exit 1
