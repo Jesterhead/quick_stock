@@ -8,8 +8,8 @@ async function bootstrap() {
   const nodeEnv = process.env.NODE_ENV || 'development';
   
   app.enableCors({
-    origin: nodeEnv === 'production' 
-      ? process.env.FRONTEND_URL || 'https://your-frontend.vercel.app'
+    origin: process.env.NODE_ENV === 'production' 
+      ? 'https://your-vercel-frontend.vercel.app'
       : 'http://localhost:4200',
     credentials: true,
   });
