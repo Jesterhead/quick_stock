@@ -2,10 +2,10 @@
   "installCommand": "npm install --prefix frontend",
   "buildCommand": "npm --prefix frontend run build",
   "outputDirectory": "frontend/dist/my-web-app",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
