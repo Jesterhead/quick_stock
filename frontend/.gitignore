@@ -1,7 +1,7 @@
 # Dependencies
 node_modules/
 package-lock.json
-Dockerfile
+# Dockerfile
 
 # Build outputs
 dist/
