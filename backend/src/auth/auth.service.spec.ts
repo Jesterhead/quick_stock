@@ -146,6 +146,59 @@ describe('AuthService', () => {
           }),
         );
     });
+    
+    it('should unlock account if lockout period has expired', async () => {
+      const pastDate = new Date(Date.now() - 10 * 60 * 1000);
+      const mockUser = {
+        id: 1,
+        username: 'brent_seems_nice',
+        password: await AuthUtils.hashPassword('correct_password'),
+        failedLoginAttempts: 5,
+        lockedUntil: pastDate,
+      };
+    
+      userRepository.findOne.mockResolvedValue(mockUser);
+      userRepository.save.mockResolvedValue({
+        ...mockUser,
+        failedLoginAttempts: 0,
+        lockedUntil: null,
+      });
+    
+      const result = await service.login('brent_seems_nice', 'correct_password');
+    
+      expect(result).toEqual({
+        token: 'fake-token',
+        username: 'brent_seems_nice',
+      });
+      expect(userRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          failedLoginAttempts: 0,
+          lockedUntil: null,
+        }),
+      );
+    });
+    
+    it('should increment failed login attempts on wrong password', async () => {
+      const mockUser = {
+        id: 1,
+        username: 'brent_seems_nice',
+        password: await AuthUtils.hashPassword('correct_password'),
+        failedLoginAttempts: 1,
+        lockedUntil: null,
+      };
+    
+      userRepository.findOne.mockResolvedValue(mockUser);
+    
+      await expect(
+        service.login('brent_seems_nice', 'wrong_password'),
+      ).rejects.toThrow();
+    
+      expect(userRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          failedLoginAttempts: 2,
+        }),
+      );
+    });
   });
 
   describe('register', () => {

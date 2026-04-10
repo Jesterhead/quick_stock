@@ -3,6 +3,10 @@
 .env.prod
 .env.local
 
+# Coverage reports
+coverage/
+*.lcov
+
 # Dependencies
 node_modules/
 

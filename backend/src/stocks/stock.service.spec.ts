@@ -101,7 +101,107 @@ describe('StockService', () => {
         await expect(service.getStock('INVALID', '1')).rejects.toThrow(
             'Stock symbol not found: INVALID',
         );
-      });
+    });
+
+    it('should throw BadRequestException if symbol is empty', async () => {
+      await expect(service.getStock('', '1')).rejects.toThrow(
+        'Symbol cannot be empty',
+      );
+    });
+
+    it('should throw BadRequestException if symbol is too long', async () => {
+      await expect(service.getStock('TOOLONGSYMBOL', '1')).rejects.toThrow(
+        'Symbol too long',
+      );
+    });
+
+    it('should throw BadRequestException if symbol format is invalid', async () => {
+      await expect(service.getStock('APP@L!', '1')).rejects.toThrow(
+        'Invalid symbol format',
+      );
+    });
+
+    it('should throw BadRequestException if symbol is whitespace only', async () => {
+      await expect(service.getStock('   ', '1')).rejects.toThrow(
+        'Symbol cannot be empty',
+      );
+    });
+  
+    it('should accept valid symbols with hyphens and dots', async () => {
+      jest.spyOn(httpService, 'get').mockReturnValue(
+        of({
+          data: {
+            c: 150.25,
+            h: 152.0,
+            l: 149.5,
+            o: 150.0,
+            pc: 149.75,
+          },
+        } as any),
+      );
+  
+      const result = await service.getStock('BRK.A', '1');
+      expect(result.symbol).toBe('BRK.A');
+    });
+  
+    it('should add stock to search history after successful fetch', async () => {
+      jest.spyOn(httpService, 'get').mockReturnValue(
+        of({
+          data: {
+            c: 150.25,
+            h: 152.0,
+            l: 149.5,
+            o: 150.0,
+            pc: 149.75,
+          },
+        } as any),
+      );
+  
+      cacheManager.get.mockResolvedValue([]);
+      cacheManager.set.mockResolvedValue(undefined);
+  
+      await service.getStock('AAPL', '1');
+  
+      expect(cacheManager.set).toHaveBeenCalledWith(
+        'search-history:1',
+        expect.arrayContaining([
+          expect.objectContaining({
+            symbol: 'AAPL',
+            price: 150.25,
+          }),
+        ]),
+        expect.any(Number),
+      );
+    });
+  
+    it('should limit search history to 5 items', async () => {
+      const existingHistory = Array(5).fill(null).map((_, i) => ({
+        symbol: `STOCK${i}`,
+        price: 100 + i,
+        timestamp: new Date(),
+      }));
+  
+      jest.spyOn(httpService, 'get').mockReturnValue(
+        of({
+          data: {
+            c: 150.25,
+            h: 152.0,
+            l: 149.5,
+            o: 150.0,
+            pc: 149.75,
+          },
+        } as any),
+      );
+  
+      cacheManager.get.mockResolvedValue(existingHistory);
+      cacheManager.set.mockResolvedValue(undefined);
+  
+      await service.getStock('NEWSTOCK', '1');
+  
+      const savedHistory = cacheManager.set.mock.calls[0][1];
+      expect(savedHistory).toHaveLength(5);
+      expect(savedHistory[0].symbol).toBe('NEWSTOCK');
+    });
   });
 
   describe('getSearchHistory', () => {
