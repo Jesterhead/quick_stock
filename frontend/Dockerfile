@@ -4,6 +4,7 @@ COPY package*.json ./
 RUN npm ci --verbose
 COPY . .
 RUN npm run build -- --base-href=/
+RUN ls -la /app/dist/my-web-app/
 
 FROM node:18-alpine
 WORKDIR /app
