@@ -20,7 +20,7 @@ A real-time stock quote lookup web application built with Angular and NestJS.
 **Backend:**
 - NestJS
 - TypeORM
-- SQLite/PostgreSQL
+- PostgreSQL
 - JWT Authentication
 - Cache Manager
 
@@ -28,6 +28,8 @@ A real-time stock quote lookup web application built with Angular and NestJS.
 
 - Node.js 18+
 - npm or yarn
+- PostgreSQL (v12 or higher)
+- Git
 
 ## Local Setup
 
@@ -40,10 +42,34 @@ cd quick_stock/backend
 npm install
 ```
 
+### Start PostgrSQL
+```bash
+# macOS (using Homebrew)
+brew services start postgresql
+
+# Or manually
+postgres -D /usr/local/var/postgres
+
+# Then run this to create the DB
+psql postgres
+```
+
+Once running, enter this into the prompt:
+```SQL
+CREATE DATABASE b;
+\q
+```
+
+You should be able to test the local DB with the following command. If it doesn't error out, you are up and running:
+```bash
+psql -d b
+```
+
 ### Setup Envinronment files
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
+Make sure you modify the values for the local environment file to match values necessary for spinning up the application.psql postgres
 
 ### Build and Start
 ```bash

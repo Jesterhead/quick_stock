@@ -17,9 +17,6 @@ export class AuthService {
       tap((response: any) => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('username', response.username);
-      }),
-      catchError((error) => {
-        return throwError(() => error.error.message || 'Login failed');
       })
     );
   }
@@ -37,9 +34,7 @@ export class AuthService {
   }
 
   register(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, { username, password }).pipe(
-      catchError((error) => throwError(() => error.error.message || 'Registration failed'))
-    );
+    return this.http.post(`${this.apiUrl}/register`, { username, password }).pipe();
   }
 
   isAuthenticated(): boolean {

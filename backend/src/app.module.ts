@@ -17,7 +17,7 @@ import { CacheModule } from '@nestjs/cache-manager';
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'production' 
         ? '.env.prod' 
-        : '.env',
+        : '.env.local',
     }),
     CacheModule.register({
       isGlobal: true,
@@ -31,7 +31,11 @@ import { CacheModule } from '@nestjs/cache-manager';
     ]),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_URL,
+      host: process.env.DATABASE_HOST ,
+      port: parseInt(process.env.DATABASE_PORT),
+      username: process.env.DATABASE_USERNAME ,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_DATABASE,
       entities: [User],
       synchronize: true,
       migrations: ['dist/migrations/*.js'],

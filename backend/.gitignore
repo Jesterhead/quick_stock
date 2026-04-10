@@ -1,6 +1,7 @@
 # Environment files
 .env
 .env.prod
+.env.local
 
 # Dependencies
 node_modules/
